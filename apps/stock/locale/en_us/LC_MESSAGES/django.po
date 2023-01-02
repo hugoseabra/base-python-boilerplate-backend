@@ -1,0 +1,55 @@
+# Stock language file
+msgid ""
+msgstr ""
+"Project-Id-Version: CarbonCare\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-28 21:41+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Dev Team\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: apps/stock/apps.py:8
+msgid "Stock"
+msgstr ""
+
+#: apps/stock/models/category.py:12 apps/stock/models/product.py:34
+msgid "Category"
+msgstr ""
+
+#: apps/stock/models/category.py:13
+msgid "Categories"
+msgstr ""
+
+#: apps/stock/models/category.py:25 apps/stock/models/product.py:25
+msgid "name"
+msgstr ""
+
+#: apps/stock/models/category.py:26
+msgid "Provide a name for the category"
+msgstr ""
+
+#: apps/stock/models/category.py:30 apps/stock/models/product.py:40
+msgid "created at"
+msgstr ""
+
+#: apps/stock/models/category.py:36 apps/stock/models/product.py:46
+msgid "updated at"
+msgstr ""
+
+#: apps/stock/models/product.py:12
+msgid "Product"
+msgstr ""
+
+#: apps/stock/models/product.py:13
+msgid "Products"
+msgstr ""
+
+#: apps/stock/models/product.py:26
+msgid "Provide a name for the product"
+msgstr ""

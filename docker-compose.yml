@@ -1,0 +1,105 @@
+version: '3.5'
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: boilderplate_db
+    networks:
+      - postgres
+    volumes:
+      - /tmp/local-db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=boilerplate
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: boilderplate_db-admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres
+    volumes:
+      - pgadmin_data:/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: boilderplate_mailhog
+    networks:
+      - mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  redis:
+    image: redis:7-alpine
+    container_name: boilderplate_redis
+    networks:
+      - redis
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis_data:/data
+
+  redis-ui:
+    image: marian/rebrow
+    container_name: boilderplate_redis-ui
+    networks:
+      - redis
+    ports:
+      - "5001:5001"
+
+  flower:
+    image: hugoseabra19/docker-celery-flower
+    container_name: boilderplate_flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - FLOWER_PORT=5555
+    ports:
+      - "5555:5555"
+    networks:
+      - redis
+
+  elasticsearch:
+    image: elasticsearch:7.17.8
+    container_name: boilderplate_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+
+  kibana:
+    image: kibana:7.17.8
+    container_name: boilderplate_kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+
+networks:
+  postgres:
+  mailhog:
+  redis:
+  elastic:
+
+volumes:
+  pgadmin_data:
+  redis_data:
+  elasticsearch_data:
