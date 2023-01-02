@@ -1,0 +1,46 @@
+[
+  {
+    "model": "stock.product",
+    "pk": "4d33efb0-046b-49d5-8b19-e4387d1b8349",
+    "fields": {
+      "name": "Shower",
+      "category": "10bf986e-9be7-4a6e-b692-051c29831ce9",
+      "active": true,
+      "created_at": "2022-12-28T20:54:02.485",
+      "updated_at": "2022-12-28T20:54:02.485"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": "874c938f-fb46-4360-bc81-c98763068693",
+    "fields": {
+      "name": "Window",
+      "category": "10bf986e-9be7-4a6e-b692-051c29831ce9",
+      "active": true,
+      "created_at": "2022-12-28T20:54:02.485",
+      "updated_at": "2022-12-28T20:54:02.485"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": "8d14ac3c-70b7-4299-9ecb-e72bb326b215",
+    "fields": {
+      "name": "Bathroom sink",
+      "category": "3a1b6b45-3203-43cd-b0dd-29316138019e",
+      "active": true,
+      "created_at": "2022-12-28T20:54:02.485",
+      "updated_at": "2022-12-28T20:54:02.485"
+    }
+  },
+  {
+    "model": "stock.product",
+    "pk": "bdf21e5d-85d6-4b01-bab5-cc2d761cd040",
+    "fields": {
+      "name": "Towel",
+      "category": "3a1b6b45-3203-43cd-b0dd-29316138019e",
+      "active": true,
+      "created_at": "2022-12-28T20:54:02.485",
+      "updated_at": "2022-12-28T20:54:02.485"
+    }
+  }
+]
