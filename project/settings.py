@@ -127,6 +127,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', cast=bool, default=True)
 if CORS_ORIGIN_ALLOW_ALL is False:
     CORS_ORIGIN_WHITELIST = config('CORS_ORIGIN_WHITELIST', cast=lambda v: [s.strip() for s in v.split(',')])
+
+# ================================================== SECURITY ==========================================================
+# Increase value according to doc: https://docs.djangoproject.com/en/4.1/ref/middleware/#http-strict-transport-security
+# Once you confirm that all assets are served securely on your site (i.e. HSTS didn’t break anything), it’s a good idea
+# to increase this value so that infrequent visitors will be protected (31536000 seconds, i.e. 1 year, is common).
+SECURE_HSTS_SECONDS = 0 if DEBUG else 3600
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = DEBUG is False
+SECURE_SSL_REDIRECT = DEBUG is False
+SESSION_COOKIE_SECURE = DEBUG is False
+CSRF_COOKIE_SECURE = DEBUG is False
+SECURE_HSTS_PRELOAD = DEBUG is False
+
 # ================================================= DATABASES ==========================================================
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -134,11 +147,11 @@ if CORS_ORIGIN_ALLOW_ALL is False:
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": config("DB_DEFAULT_HOST"),
-        "NAME": config("DB_DEFAULT_NAME"),
-        "USER": config("DB_DEFAULT_USER"),
-        "PASSWORD": config("DB_DEFAULT_PWD"),
-        "PORT": config("DB_DEFAULT_PORT"),
+        "HOST": config("DB_DEFAULT_HOST", "postgres"),
+        "NAME": config("DB_DEFAULT_NAME", "db"),
+        "USER": config("DB_DEFAULT_USER", "postgres"),
+        "PASSWORD": config("DB_DEFAULT_PWD", "postgres"),
+        "PORT": config("DB_DEFAULT_PORT", cast=int, default=5432),
         "ATOMIC_REQUESTS": True,
     },
 }
