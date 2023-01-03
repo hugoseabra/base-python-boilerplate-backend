@@ -60,7 +60,6 @@ class ProductAPIEndpointsTestCase(APITestCase):
         for item in results:
             pk = item['pk']
             instance = instances.get(pk)
-            print(instance)
 
             self.assertEqual(str(instance.pk), item['pk'])
             self.assertEqual(instance.name, item['name'])

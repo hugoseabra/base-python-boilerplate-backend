@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class StockConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+    default_auto_field = 'django.db.models.UUIDField'
     name = 'apps.stock'
     verbose_name = _('Stock')
 
