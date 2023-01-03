@@ -69,37 +69,11 @@ services:
     networks:
       - redis
 
-  elasticsearch:
-    image: elasticsearch:7.17.8
-    container_name: boilderplate_elasticsearch
-    environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
-      - xpack.security.enabled=false
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-    networks:
-      - elastic
-
-  kibana:
-    image: kibana:7.17.8
-    container_name: boilderplate_kibana
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-    networks:
-      - elastic
-
 networks:
   postgres:
   mailhog:
   redis:
-  elastic:
 
 volumes:
   pgadmin_data:
   redis_data:
-  elasticsearch_data:
