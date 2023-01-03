@@ -18,9 +18,9 @@ jobs:
         postgres:
           image: postgres:15-alpine
           env:
-            - POSTGRES_DB=boilerplate
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
+            POSTGRES_DB=boilerplate
+            POSTGRES_USER=postgres
+            POSTGRES_PASSWORD=postgres
           ports:
             - 5432/tcp
           options: >-
