@@ -11,7 +11,7 @@ inputs:
     default: './'
   file:
     description: 'Docker compose file'
-    required: false
+    required: true
   service:
     description: 'Service run tests inside'
     required: true
