@@ -1,0 +1,75 @@
+name: 'Docker compose tests run'
+description: 'Run tests in docker compose environment'
+author: hello@cloudposse.com
+branding:
+  icon: 'grid'
+  color: 'white'
+inputs:
+  workdir:
+    description: 'Working directory'
+    required: false
+    default: './'
+  file:
+    description: 'Docker compose file'
+    required: true
+    default: ${DIR}/docker-compose.yml
+  service:
+    description: 'Service run tests inside'
+    required: true
+  entrypoint:
+    description: 'Entrypoint'
+    default: '/bin/sh'
+    required: false
+  command:
+    description: 'Command to tests'
+    required: true
+  docker-compose-version:
+    description: 'Docker compose version'
+    required: false
+    default: '3.5'
+  registry:
+    description: 'Docker registry'
+    required: true
+  login:
+    description: 'Docker login'
+    required: false
+    default: ''
+  password:
+    description: 'Docker password'
+    required: false
+    default: ''
+outputs: {}
+runs:
+  using: "composite"
+  steps:
+    - uses: KengoTODA/actions-setup-docker-compose@main
+      with:
+        version: ${{ inputs.docker-compose-version }}
+
+    - name: Registry login
+      uses: docker/login-action@v2
+      if: ${{ contains(inputs.registry, '.amazonaws.com') || ( inputs.login != '' && inputs.password != '' ) }}
+      with:
+        registry: ${{ inputs.registry }}
+        username: ${{ inputs.login }}
+        password: ${{ inputs.password }}
+
+    - name: Start stack
+      shell: bash
+      run: |
+        cd ${{ inputs.workdir }}
+        docker-compose -p ${GITHUB_RUN_ID} -f ${{ inputs.file }} up -d --build
+
+    - name: Test
+      shell: bash
+      run: |
+        cd ${{ inputs.workdir }}
+        DIR=$(pwd)
+        docker-compose -p ${GITHUB_RUN_ID} -f ${{ inputs.file }} run -v ${DIR}:/github_workspace -w /github_workspace --entrypoint ${{ inputs.entrypoint }} --rm ${{ inputs.service }} ${{ inputs.command }}
+
+    - name: Stop stacks
+      if: always()
+      shell: bash
+      run: |
+        cd ${{ inputs.workdir }}
+        docker-compose -p ${GITHUB_RUN_ID} -f ${{ inputs.file }} down -v

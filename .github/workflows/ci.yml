@@ -28,9 +28,9 @@ jobs:
       - name: Prepare environment variables
         run: mv .env-sample .env
       - name: Tests
-        uses: cloudposse/github-action-docker-compose-test-run@main
+        uses: ./.github/actions/docker-compose-run
         with:
-          file: ./docker-compose.yml
+          file: ${DIR}/docker-compose.yml
           service: api
           command: python manage.py test --verbosity 3
 
