@@ -25,7 +25,7 @@ inputs:
   docker-compose-version:
     description: 'Docker compose version'
     required: false
-    default: 'latest'
+    default: '1.29.2'
   registry:
     description: 'Docker registry'
     required: true
