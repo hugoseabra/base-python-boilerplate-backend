@@ -23,6 +23,7 @@ RUN set -ex \
         build-essential \
         nano \
         curl \
+        inetutils-ping \
         libpcre3 \
         libtiff5-dev \
         zlib1g-dev \

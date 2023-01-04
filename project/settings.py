@@ -214,8 +214,8 @@ HEALTH_CHECK = {
 
 # =========================================================== BROKER ===================================================
 REDIS_SSL = config('REDIS_SSL', cast=bool, default=False)
-REDIS_HOST = config('REDIS_HOST', 'localhost')
-REDIS_USERNAME = config('REDIS_USERNAME', '')
+REDIS_HOST = config('REDIS_HOST', 'redis')
+REDIS_USERNAME = config('REDIS_USERNAME', default='')
 REDIS_PORT = config('REDIS_PORT', cast=int, default=6379)
 
 BROKER_REDIS_BASE_URL = 'rediss' if REDIS_SSL else 'redis'
@@ -225,11 +225,14 @@ BROKER_REDIS_BASE_URL += "/{}"
 
 if REDIS_SSL is True:
     BROKER_REDIS_BASE_URL += '?ssl_cert_reqs=required'
+
+# DB 0 will be used for cache
+REDIS_URL = BROKER_REDIS_BASE_URL.format(0)  # Redis - Channel 0
 # ============================================================ CACHE ===================================================
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': BROKER_REDIS_BASE_URL.format(0),  # Redis - Channel 0
+        'LOCATION': REDIS_URL,
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient'
         },
