@@ -11,8 +11,7 @@ inputs:
     default: './'
   file:
     description: 'Docker compose file'
-    required: true
-    default: ./docker-compose.yml
+    required: false
   service:
     description: 'Service run tests inside'
     required: true
