@@ -64,11 +64,11 @@ runs:
       run: |
         cd ${{ inputs.workdir }}
         DIR=$(pwd)
-        docker-compose -p ${GITHUB_RUN_ID} -f ${{ inputs.file }} run -v ${DIR}:/github_workspace -w /github_workspace --entrypoint ${{ inputs.entrypoint }} --rm ${{ inputs.service }} ${{ inputs.command }}
+        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} run -v ${DIR}:/github_workspace -w /github_workspace --entrypoint ${{ inputs.entrypoint }} --rm ${{ inputs.service }} ${{ inputs.command }}
 
     - name: Stop stacks
       if: always()
       shell: bash
       run: |
         cd ${{ inputs.workdir }}
-        docker-compose -p ${GITHUB_RUN_ID} -f ${{ inputs.file }} down -v
+        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} down -v
