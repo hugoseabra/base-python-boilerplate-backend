@@ -1,8 +1,59 @@
 version: '3.5'
 services:
+  api:
+    build:
+      context: .
+      dockerfile: conf/docker/Dockerfile
+      target: development
+    command:
+      - python
+      - manage.py
+      - runserver_plus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    container_name: boilerplate_api
+    volumes:
+      - .:/code/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - postgres
+      - mailhog
+      - redis
+      - celery
+
+  celery:
+    build:
+      context: .
+      dockerfile: conf/docker/Dockerfile
+      target: development
+    hostname: celery_service
+    container_name: boilerplate_celery
+    command:
+      - celery
+      - -A
+      - project
+      - worker
+      - --autoscale=10,5
+      - -l
+      - INFO
+    volumes:
+      - .:/code/app
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - postgres
+      - mailhog
+      - redis
+      - celery
+
   postgres:
     image: postgres:15-alpine
-    container_name: boilderplate_db
+    container_name: boilerplate_db
     networks:
       - postgres
     volumes:
@@ -16,7 +67,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: boilderplate_db-admin
+    container_name: boilerplate_db-admin
     ports:
       - "5050:80"
     depends_on:
@@ -31,7 +82,7 @@ services:
 
   mailhog:
     image: mailhog/mailhog
-    container_name: boilderplate_mailhog
+    container_name: boilerplate_mailhog
     networks:
       - mailhog
     ports:
@@ -40,7 +91,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: boilderplate_redis
+    container_name: boilerplate_redis
     networks:
       - redis
     ports:
@@ -52,7 +103,7 @@ services:
 
   redis-ui:
     image: marian/rebrow
-    container_name: boilderplate_redis-ui
+    container_name: boilerplate_redis-ui
     networks:
       - redis
     ports:
@@ -60,7 +111,7 @@ services:
 
   flower:
     image: hugoseabra19/docker-celery-flower
-    container_name: boilderplate_flower
+    container_name: boilerplate_flower
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/1
       - FLOWER_PORT=5555
@@ -70,6 +121,7 @@ services:
       - redis
 
 networks:
+  celery:
   postgres:
   mailhog:
   redis:
