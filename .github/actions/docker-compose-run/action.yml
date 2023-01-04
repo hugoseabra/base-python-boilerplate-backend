@@ -57,7 +57,7 @@ runs:
       shell: bash
       run: |
         cd ${{ inputs.workdir }}
-        docker-compose -p ${GITHUB_RUN_ID} -f ${{ inputs.file }} up -d --build
+        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} up -d --build
 
     - name: Test
       shell: bash
