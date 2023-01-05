@@ -1,0 +1,55 @@
+version: '3.5'
+services:
+  api:
+    networks:
+      - mailhog
+
+  celery:
+    networks:
+      - mailhog
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres
+    volumes:
+      - pgadmin_data:/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+
+  mailhog:
+    image: mailhog/mailhog
+    networks:
+      - mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  redis-ui:
+    image: marian/rebrow
+    networks:
+      - redis
+    ports:
+      - "5001:5001"
+
+  flower:
+    image: hugoseabra19/docker-celery-flower
+    environment:
+      # Redis DB used by celery
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - FLOWER_PORT=5555
+    ports:
+      - "5555:5555"
+    networks:
+      - redis
+
+networks:
+  mailhog:
+
+volumes:
+  pgadmin_data:

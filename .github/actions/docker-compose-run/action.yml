@@ -1,0 +1,26 @@
+name: 'Docker compose run'
+description: 'Runs command over a certain docker-compose service'
+author: hugoseabra19@gmail.com
+branding:
+  icon: 'grid'
+  color: 'white'
+inputs:
+  file:
+    description: 'Docker compose file'
+    required: true
+  service:
+    description: 'Service run tests inside'
+    required: true
+  command:
+    description: 'Command to tests'
+    required: true
+  additional-args:
+    description: 'Additional arguments used when services are being executed'
+    required: false
+outputs: {}
+runs:
+  using: "composite"
+  steps:
+    - name: Run command
+      shell: bash
+      run: docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} run ${{ inputs.additional-args }} ${{ inputs.service }} ${{ inputs.command }}

@@ -1,0 +1,54 @@
+version: '3.5'
+services:
+  main_base:
+    image: industrycare/boilerplate
+    build:
+      context: ../../.
+      dockerfile: conf/docker/Dockerfile
+      target: development
+    networks:
+      - postgres
+      - redis
+      - celery
+
+  celery:
+    extends:
+      service: main_base
+    hostname: celery_service
+    command: ['celery', '-A', 'project', 'worker', '--autoscale=10,5', '-l', 'INFO']
+    networks:
+      - postgres
+      - redis
+      - celery
+
+  postgres:
+    image: postgres:15-alpine
+    networks:
+      - postgres
+    volumes:
+      - /tmp/local-db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=boilerplate
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - redis
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis_data:/data
+
+networks:
+  celery:
+  postgres:
+  redis:
+
+volumes:
+  redis_data:

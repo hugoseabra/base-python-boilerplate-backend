@@ -1,0 +1,18 @@
+name: 'Docker compose stop'
+description: 'Stops docker-compose services'
+author: hugoseabra19@gmail.com
+branding:
+  icon: 'grid'
+  color: 'white'
+inputs:
+  file:
+    description: 'Docker compose file'
+    required: true
+outputs: {}
+runs:
+  using: "composite"
+  steps:
+    - name: Stop stack
+      if: always()
+      shell: bash
+      run: docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} down -v
