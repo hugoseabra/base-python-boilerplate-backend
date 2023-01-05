@@ -32,7 +32,7 @@ jobs:
         with:
           service: api
           file: ./docker-compose.yml
-          command: manage.py test --verbosity 3
+          command: python3 manage.py test --verbosity 3
 
 #      - name: Check deployment
 #        run: docker exec api DEBUG=false python manage.py check --deploy
