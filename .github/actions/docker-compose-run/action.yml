@@ -23,4 +23,6 @@ runs:
   steps:
     - name: Run command
       shell: bash
-      run: docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} exec ${{ inputs.additional-args }} ${{ inputs.service }} ${{ inputs.command }}
+      run: >
+        echo ${GITHUB_RUN_ID}
+        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} exec ${{ inputs.additional-args }} ${{ inputs.service }} ${{ inputs.command }}
