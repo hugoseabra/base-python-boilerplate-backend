@@ -1,80 +1,26 @@
-name: 'Docker compose tests run'
-description: 'Run tests in docker compose environment'
-author: hello@cloudposse.com
+name: 'Docker compose run'
+description: 'Runs command over a certain docker-compose service'
+author: hugoseabra19@gmail.com
 branding:
   icon: 'grid'
   color: 'white'
 inputs:
-  workdir:
-    description: 'Working directory'
-    required: false
-    default: './'
   file:
     description: 'Docker compose file'
     required: true
   service:
     description: 'Service run tests inside'
     required: true
-  entrypoint:
-    description: 'Entrypoint'
-    default: '/bin/sh'
-    required: false
   command:
     description: 'Command to tests'
     required: true
-  docker-compose-version:
-    description: 'Docker compose version'
+  additional-args:
+    description: 'Additional arguments used when services are being executed'
     required: false
-    default: '1.29.2'
-  registry:
-    description: 'Docker registry'
-    required: true
-  login:
-    description: 'Docker login'
-    required: false
-    default: ''
-  password:
-    description: 'Docker password'
-    required: false
-    default: ''
 outputs: {}
 runs:
   using: "composite"
   steps:
-    - uses: KengoTODA/actions-setup-docker-compose@main
-      with:
-        version: ${{ inputs.docker-compose-version }}
-
-    - name: Registry login
-      uses: docker/login-action@v2
-      if: ${{ contains(inputs.registry, '.amazonaws.com') || ( inputs.login != '' && inputs.password != '' ) }}
-      with:
-        registry: ${{ inputs.registry }}
-        username: ${{ inputs.login }}
-        password: ${{ inputs.password }}
-
-    - name: Start stack
-      shell: bash
-      run: |
-        cd ${{ inputs.workdir }}
-        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} up -d --build
     - name: Run command
       shell: bash
-      run: |
-        cd ${{ inputs.workdir }}
-        DIR=$(pwd)
-        docker-compose exec ${{ inputs.service }} ls -la
-
-    - name: Run command
-      shell: bash
-      run: |
-        cd ${{ inputs.workdir }}
-        DIR=$(pwd)
-        docker-compose exec ${{ inputs.service }} ${{ inputs.command }}
-
-    - name: Stop stacks
-      if: always()
-      shell: bash
-      run: |
-        cd ${{ inputs.workdir }}
-        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} down -v
+      run: docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} exec ${{ inputs.additional-args }} ${{ inputs.service }} ${{ inputs.command }}

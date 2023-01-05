@@ -7,7 +7,6 @@ services:
       dockerfile: conf/docker/Dockerfile
       target: development
     command: ['python', 'manage.py', 'runserver_plus', '0.0.0.0:8000']
-    container_name: boilerplate_api
     volumes:
       - .:/code/app
     ports:
@@ -28,7 +27,6 @@ services:
       dockerfile: conf/docker/Dockerfile
       target: development
     hostname: celery_service
-    container_name: boilerplate_celery
     command: ['celery', '-A', 'project', 'worker', '--autoscale=10,5', '-l', 'INFO']
     volumes:
       - .:/code/app
@@ -43,7 +41,6 @@ services:
 
   postgres:
     image: postgres:15-alpine
-    container_name: boilerplate_db
     networks:
       - postgres
     volumes:
@@ -57,7 +54,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: boilerplate_db-admin
     ports:
       - "5050:80"
     depends_on:
@@ -72,7 +68,6 @@ services:
 
   mailhog:
     image: mailhog/mailhog
-    container_name: boilerplate_mailhog
     networks:
       - mailhog
     ports:
@@ -81,7 +76,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: boilerplate_redis
     networks:
       - redis
     ports:
@@ -93,7 +87,6 @@ services:
 
   redis-ui:
     image: marian/rebrow
-    container_name: boilerplate_redis-ui
     networks:
       - redis
     ports:
@@ -101,7 +94,6 @@ services:
 
   flower:
     image: hugoseabra19/docker-celery-flower
-    container_name: boilerplate_flower
     environment:
       # Redis DB used by celery
       - CELERY_BROKER_URL=redis://redis:6379/1

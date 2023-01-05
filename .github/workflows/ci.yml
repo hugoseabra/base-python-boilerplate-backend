@@ -12,31 +12,46 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
         max-parallel: 4
-        matrix:
-          python-version: ['3.10']
 
       steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-#      - name: Run services
-#        run: docker-compose -p $GITHUB_RUN_id up -d --build --exit-code-from api
+
       - name: Prepare environment variables
-        run: mv .env-sample .env
-      - name: Tests
+        run: cp .env-sample .env
+
+      - name: Setup docker-compose
+        uses: ./.github/actions/docker-compose-setup
+
+      - name: Start services
+        uses: ./.github/actions/docker-compose-start
+        with:
+          file: ./docker-compose.yml
+
+      - name: Run Tests
         uses: ./.github/actions/docker-compose-run
         with:
           service: api
           file: ./docker-compose.yml
-          command: python3 manage.py test --verbosity 3
+          command: coverage run manage.py test --verbosity 3
 
-#      - name: Check deployment
-#        run: docker exec api DEBUG=false python manage.py check --deploy
-#      - name: Run Tests
-#        run: docker exec api coverage run python manage.py test
-#      - name: Show coverage
-#        run: docker exec api coverage report
+      - name: Show coverage report
+        uses: ./.github/actions/docker-compose-run
+        with:
+          service: api
+          file: ./docker-compose.yml
+          command: coverage report
+
+      - name: Check deployment configs
+        uses: ./.github/actions/docker-compose-run
+        with:
+          service: api
+          file: ./docker-compose.yml
+          additional-args: -e DEBUG=false
+          command: python manage.py check --deploy
+
+      - name: Stop services
+        uses: ./.github/actions/docker-compose-stop
+        with:
+          file: ./docker-compose.yml

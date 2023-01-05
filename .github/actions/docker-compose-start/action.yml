@@ -1,0 +1,41 @@
+name: 'Docker compose stop'
+description: 'Stops docker-compose services'
+author: hugoseabra19@gmail.com
+branding:
+  icon: 'grid'
+  color: 'white'
+inputs:
+  file:
+    description: 'Docker compose file'
+    required: true
+  registry:
+    description: 'Docker registry'
+    required: true
+  login:
+    description: 'Docker login'
+    required: false
+    default: ''
+  password:
+    description: 'Docker password'
+    required: false
+    default: ''
+outputs: {}
+runs:
+  using: "composite"
+  steps:
+    - name: Registry login
+      uses: docker/login-action@v2
+      if: ${{ contains(inputs.registry, '.amazonaws.com') || ( inputs.login != '' && inputs.password != '' ) }}
+      with:
+        registry: ${{ inputs.registry }}
+        username: ${{ inputs.login }}
+        password: ${{ inputs.password }}
+
+    - name: Build services
+      shell: bash
+      run: |
+        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} build
+
+    - name: Start stack
+      shell: bash
+      run: docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} up -d
