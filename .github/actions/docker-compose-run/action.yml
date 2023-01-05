@@ -59,12 +59,12 @@ runs:
         cd ${{ inputs.workdir }}
         docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} up -d --build
 
-    - name: Test
+    - name: Run command
       shell: bash
       run: |
         cd ${{ inputs.workdir }}
         DIR=$(pwd)
-        docker-compose -f ${{ inputs.file }} -p ${GITHUB_RUN_ID} run --entrypoint ${{ inputs.entrypoint }} --rm ${{ inputs.service }} -- ${{ inputs.command }}
+        docker-compose exec ${{ inputs.service }} -- ${{ inputs.command }}
 
     - name: Stop stacks
       if: always()
