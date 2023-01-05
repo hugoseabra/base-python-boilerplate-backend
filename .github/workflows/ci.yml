@@ -53,5 +53,6 @@ jobs:
 
       - name: Stop services
         uses: ./.github/actions/docker-compose-stop
+        if: always()
         with:
           file: ./docker-compose.yml
